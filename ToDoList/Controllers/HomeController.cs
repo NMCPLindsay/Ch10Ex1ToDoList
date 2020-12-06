@@ -15,10 +15,12 @@ namespace ToDoList.Controllers
         {
             // load current filters and data needed for filter drop downs in ViewBag
             var filters = new Filters(id);
-            ViewBag.Filters = filters;
-            ViewBag.Categories = context.Categories.ToList();
-            ViewBag.Statuses = context.Statuses.ToList();
-            ViewBag.DueFilters = Filters.DueFilterValues;
+            var toDoViewModel = new ToDoViewModel();
+            toDoViewModel.Filters = filters;
+            toDoViewModel.Categories = context.Categories.ToList();
+            toDoViewModel.Statuses = context.Statuses.ToList();
+            toDoViewModel.DueFilters = Filters.DueFilterValues;
+            
 
             // get ToDo objects from database based on current filters
             IQueryable<ToDo> query = context.ToDos
@@ -39,7 +41,7 @@ namespace ToDoList.Controllers
                     query = query.Where(t => t.DueDate == today);
             }
             var tasks = query.OrderBy(t => t.DueDate).ToList();
-            return View(tasks);
+            return View(toDoViewModel);
         }
 
         public IActionResult Add()
